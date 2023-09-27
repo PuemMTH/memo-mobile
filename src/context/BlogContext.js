@@ -1,33 +1,75 @@
-import React, { createContext, useState, useReducer } from "react";
-
-const BlogContext = createContext();
+import createDataContext from "./createDataContext";
 
 const memoReducer = (state, action) => {
 	switch (action.type) {
-		case "add_memo":
-			return [...state, { title: `Memo #${state.length + 1}` }];
-		case "delete_memo":
-			return state.filter((memo) => memo.title !== action.payload);
+		case "edit-memo":
+			return state.map((memo) =>
+				memo.id === action.payload.id ? action.payload : memo
+			);
+		case "del-memo":
+			return state.filter((memo) => memo.id != action.payload);
+		case "add-memo":
+			return [
+				...state,
+				{
+					id: Math.floor(Math.random() * 99999),
+					title: action.payload.title,
+					content: action.payload.content,
+					tags: action.payload.tags,
+					dateTime: action.payload.dateTime,
+				},
+			];
 		default:
 			return state;
 	}
 };
-
-export const BlogProvider = ({ children }) => {
-	const [memoLists, dispatch] = useReducer(memoReducer, []);
-
-	const addMemo = () => {
-		dispatch({ type: "add_memo" });
+const addMemo = (dispatch) => {
+	return (title, content, tags) => {
+		const dateTime = new Date();
+		dispatch({ type: "add-memo", payload: { title, content, tags, dateTime } });
 	};
-	const delMemo = (title) => {
-		dispatch({ type: "delete_memo", payload: title });
-	};
-
-	return (
-		<BlogContext.Provider value={{ data: memoLists, addMemo, delMemo }}>
-			{children}
-		</BlogContext.Provider>
-	);
 };
 
-export default BlogContext;
+const delMemo = (dispatch) => {
+	return (id) => {
+		dispatch({ type: "del-memo", payload: id });
+	};
+};
+
+const editMemo = (dispatch) => {
+	return (id, title, content, tags) => {
+		const dateTime = new Date();
+		dispatch({
+			type: "edit-memo",
+			payload: { id, title, content, tags, dateTime },
+		});			
+	};
+};
+
+export const { Context, Provider } = createDataContext(
+	memoReducer,
+	{ addMemo, delMemo, editMemo },
+	[
+		{
+			id: 1,
+			title: "เม ติ๊งต๊อง",
+			content: "This is a test memo.",
+			tags: "note✨, test🗒️, memo🧨",
+			dateTime: new Date(),
+		},
+		{
+			id: 2,
+			title: "ปลื้ม ติ๊งต๊อง",
+			content: "This is a test memo.",
+			tags: "note✨, test🗒️",
+			dateTime: new Date(),
+		},
+		{
+			id: 3,
+			title: "แพรว ติ๊งต๊อง",
+			content: "This is a test memo.",
+			tags: "note✨",
+			dateTime: new Date(),
+		}
+	]
+);
