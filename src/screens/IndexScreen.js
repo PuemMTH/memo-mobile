@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
 	View,
 	StyleSheet,
@@ -14,6 +14,11 @@ import { Context } from "../context/BlogContext";
 
 const IndexScreen = ({ navigation }) => {
 	const { state, addMemo, delMemo } = useContext(Context);
+
+	useEffect(() => {
+		console.log("ShowScreen");
+		console.log(JSON.stringify(state));
+	}, [state]);		
 
 	const ConfirmDelete = ({action}) => {
 		return Alert.alert(
@@ -39,7 +44,7 @@ const IndexScreen = ({ navigation }) => {
 		<View style={styles.container}>
 			<FlatList
 				data={state}
-				keyExtractor={(memo) => memo.title}
+				keyExtractor={(memo) => memo.id.toString()}
 				renderItem={({ item }) => {
 					return (
 						<TouchableOpacity

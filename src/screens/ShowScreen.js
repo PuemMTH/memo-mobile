@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { Context } from "../context/BlogContext";
 
@@ -6,6 +6,7 @@ const ShowScreen = ({ route }) => {
 	const { state } = useContext(Context);
 
 	const memo = state.find((memo) => memo.id == route.params.id);
+	
 	const tags = memo.tags.split(",");
 	return (
 		<View style={styles.container}>
@@ -29,7 +30,9 @@ const ShowScreen = ({ route }) => {
 				}}
 			>
 				{tags.length > 0 ? (
-					<View>
+					<View
+						
+					>
 						<Text
 							style={{
 								fontSize: 18,

@@ -13,13 +13,17 @@ const MemoForm = ({ onSubmit, initValues }) => {
 	const [content, setContent] = useState(initValues.content);
 	const [tags, setTags] = useState(initValues.tags);
 
+	useEffect(() => {
+		console.log("MemoForm");
+	}, []);
+
 	return (
 		<View>
 			<Text style={styles.label}>Title : </Text>
 			<TextInput
 				style={styles.input}
 				value={title}
-                placeholder="Title"
+				placeholder="Title"
 				onChangeText={(text) => setTitle(text)}
 			/>
 			<Text style={styles.label}>Content : </Text>
@@ -27,7 +31,7 @@ const MemoForm = ({ onSubmit, initValues }) => {
 				style={styles.input}
 				multiline
 				numberOfLines={5}
-                placeholder="Write your memo here..."
+				placeholder="Write your memo here..."
 				value={content}
 				onChangeText={(text) => setContent(text)}
 			/>
@@ -35,7 +39,7 @@ const MemoForm = ({ onSubmit, initValues }) => {
 			<TextInput
 				style={styles.input}
 				value={tags}
-                placeholder="ex. tag1,tag2,tag3"
+				placeholder="ex. tag1,tag2,tag3"
 				onChangeText={(text) => setTags(text)}
 			/>
 
@@ -52,18 +56,17 @@ const MemoForm = ({ onSubmit, initValues }) => {
 					} else {
 						try {
 							let tagList = tags.split(",");
-							tagList.forEach((item) => {
-								if (item.length > 10) {
-									Alert.alert(
-										"Error",
-										"Tag must not exceed 10 characters!",
-										[{ text: "OK" }],
-										{ cancelable: false }
-									)
-								} else {
-									onSubmit(title, content, tags);
-								} 
-							});
+							if (tagList.some((item) => item.length > 10)) {
+								Alert.alert(
+									"Error",
+									"Tag must not exceed 10 characters!",
+									[{ text: "OK" }],
+									{ cancelable: false }
+								);
+							} else {
+								console.log("TAGS: " + tags);
+								onSubmit(title, content, tags);
+							}
 						} catch (error) {
 							Alert.alert(
 								"Error",
@@ -72,7 +75,6 @@ const MemoForm = ({ onSubmit, initValues }) => {
 								{ cancelable: false }
 							);
 						}
-						
 					}
 				}}
 			>

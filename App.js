@@ -33,7 +33,7 @@ export default function App() {
 									<Entypo name="plus" size={24} color="#fff" />
 								</TouchableOpacity>
 							),
-						})}
+						})}	
 					/>
 					<Stack.Screen name="Create" component={CreateScreen} />
 					<Stack.Screen
